@@ -1,0 +1,47 @@
+.congratulation{
+  text-align: center;
+  font-family: "Open sans";
+  .upper-box{
+    padding: 13% 0;
+    background-color: color($colors, header);
+    h3{
+      color: color($colors, primary);
+      font-weight: 300;
+    }
+    p{
+      font-size: 16px;
+      font-weight: 100;
+      color: #ffffff;
+      width: 100%;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+  }
+  .notification{
+    margin-top: -10%;
+    button{
+      background: transparent;
+    }
+    img{
+      width: 50px;
+    }
+    p{
+      font-size: 13px;
+      color: #999;
+      font-weight: 100;
+      margin: 6px;
+    }
+  }
+  .track{
+    margin-top: 12px;
+    h4{
+      color: color($colors, primary);
+      font-weight: 300;
+      font-size: 18px;
+      margin: 5px;
+    }
+  }
+}
+.fill-bg{
+  background-color:color($colors, secondary);
+}

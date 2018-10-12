@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <button ion-button menuToggle>
+      <img src="./assets/images/burger_menu.png" alt="" style =" width:15px; height: 15px;">
+    </button>
+    <ion-title color="primary">Notifications</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fill-bg">
+  <div class="parentDivScreen">
+    <div class="heading">
+      <ion-item-divider class="fill-bg"
+                        style="
+                                padding-top: 5px; 
+                                padding-bottom: 5px; 
+                                border-bottom: 0px">
+        <div id="heading-bg" 
+        style="padding: 10px; 
+              background: url('./assets/images/heading_bg.png');  
+              text-align: center;
+              background-size: 100%; 
+              background-repeat: no-repeat;
+              background-position: center;
+              width: 100%; 
+              height: 100%;"
+              color="secondary">
+        <p color="secondary">NOTIFICATIONS SETTINGS</p>
+        </div>
+      </ion-item-divider>
+      <form>
+        <ion-list *ngIf="false">
+           <ion-item class="fill-bg" *ngFor="let notification of notifications">
+             <ion-label style="color: white; font-size: 20px;">{{ notification.htmlValue }}</ion-label>
+             <ion-toggle  
+              [checked]="notification.checked"
+              #{{notification.name}}
+              name="{{notification.checked}}"
+              [(ngModel)]="notification.checked"
+              disabled="{{notification.disabled}}"
+              (ionChange)=appNotification(notification.name)
+              color="primary"></ion-toggle>
+           </ion-item>
+            
+            
+        </ion-list>
+        
+        <ion-list *ngIf="null">
+          
+              <span style="display: inline; color: white; font-size:20px">Send sms notifications</span>
+          
+          
+              <ion-toggle checked="false" style="display: inline!important"></ion-toggle>
+          
+            
+        </ion-list>
+        <ion-list *ngIf="null">
+            <p style="display: inline; color: white; font-size:20px">Send email notifications</p>
+            <ion-toggle checked="false"></ion-toggle>
+        </ion-list>
+        <ion-list *ngIf="null">
+            <p style="display: inline; color: white; font-size:20px">Send app promo</p>
+            <ion-toggle checked="false"></ion-toggle>
+        </ion-list>
+      </form>
+    </div>
+
+ </div>   
+</ion-content>
+<ion-footer style="padding: 10px;">
+        <button ion-button full style="height: 50px" (click)="save(appNotification.value, smsNotification, emailNotification, promoNotification)">
+        <p style="font-size: 20px;" color="secondary">Save</p>
+        </button>
+</ion-footer>

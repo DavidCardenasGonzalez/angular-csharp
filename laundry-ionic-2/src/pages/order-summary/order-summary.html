@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-navbar color="secondary">
+    <button ion-button menuToggle>
+      <img src="./assets/images/burger_menu.png" alt="" style =" width:15px; height: 15px;">
+    </button>
+    <ion-title>Order Summary</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="fill-bg">
+  <div class="parentDivScreen">
+    <div class="heading">
+      <ion-item-divider class="fill-bg"
+                        style="
+                                padding-top: 5px; 
+                                padding-bottom: 5px; 
+                                border-bottom: 0px">
+        <div id="heading-bg" 
+        style="padding: 10px; 
+              background: url('./assets/images/heading_bg.png');  
+              text-align: center;
+              background-size: 100%; 
+              background-repeat: no-repeat;
+              background-position: center;
+              width: 100%; 
+              height: 100%;"
+              color="secondary">
+          <p color="secondary" *ngIf="!showFooter" class="uppercase">Review & Pay</p> 
+          <p color="secondary" *ngIf="showFooter" class="uppercase">Review</p> 
+        </div>
+      </ion-item-divider>
+    </div>
+    <ion-item-divider *ngIf="!details.error" class="fill-bg"> 
+          <ion-row style="color: white;"> 
+            <ion-col width-10 class="center">No.</ion-col> 
+            <ion-col width-30 class="center">Item</ion-col> 
+            <ion-col width-20 class="center">Count</ion-col> 
+            <ion-col width-20 class="center">Amount</ion-col> 
+          </ion-row> 
+        </ion-item-divider> 
+    <ion-list style="height: 20vh;" class="fill-bg"> 
+        <ion-item-divider style="color: white;" *ngIf="details.error" class="center fill-bg"> 
+          {{ details.error }}
+        </ion-item-divider>
+        <ion-item-divider *ngFor="let laundryItem of laundryItems" class="fill-bg">
+           <ion-row style="color: white;" class="fill-bg">            
+            <ion-col width-10 class="center">{{ laundryItems.indexOf(laundryItem) + 1 }}</ion-col> 
+            <ion-col width-30 class="center">{{ laundryItem.name }}</ion-col> 
+            <ion-col width-20 class="center">{{ laundryItem.count }}</ion-col> 
+            <ion-col width-20 class="center">{{ laundryItem.rate + " AED" }}</ion-col> 
+          </ion-row>
+        </ion-item-divider>
+    </ion-list>
+    <ion-list style="color: white!important; height: 40vh;" class="fill-bg">
+        <ion-row>
+          <ion-item-divider style="font-weight: bolder; font-size: 20px;" class="fill-bg">
+            Pickup &amp; Dropoff Location
+          </ion-item-divider>
+        </ion-row>
+        <ion-row>
+          <ion-item class="fill-bg" style="font-size: 14px;overflow-x: wrap; overflow-wrap: break-word;">
+            {{ locationForHTML }}
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item-divider style="font-weight: bolder; font-size: 20px;" class="fill-bg">
+            Pick up Timing
+          </ion-item-divider>
+        </ion-row>
+        <ion-row>
+          <ion-item class="fill-bg" style="font-size: 14px;">
+            {{ pickUpTime }}
+          </ion-item>
+        </ion-row>
+
+        <ion-row>
+          <ion-item-divider *ngIf="!orderID" style="font-weight: bolder; font-size: 20px;" class="fill-bg">
+            Drop off Timing
+          </ion-item-divider>
+          <ion-item-divider *ngIf="!!orderID" style="font-weight: bolder; font-size: 20px;" class="fill-bg">
+            Expected Delivery Date
+          </ion-item-divider>
+        </ion-row>
+        <ion-row>
+          <ion-item class="fill-bg" style="font-size: 14px;">
+            {{ eta }} 
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item-divider style="font-weight: bolder; font-size: 20px;" class="fill-bg">Payment Method</ion-item-divider>
+        </ion-row>
+        <ion-row>
+          <ion-item class="fill-bg">
+            <ion-label>Cash on Delivery</ion-label>
+            <ion-toggle checked="true" disabled="true"></ion-toggle>
+          </ion-item>
+        </ion-row>
+    </ion-list>
+  </div>
+</ion-content>
+<ion-footer *ngIf="!showFooter" style="padding: 10px;">
+        <button ion-button full style="height: 50px" (click)="startNextScreen()">
+        <p style="font-size: 20px;" color="secondary">Place Order</p>
+        </button>
+</ion-footer>

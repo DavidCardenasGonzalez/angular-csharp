@@ -1,0 +1,16 @@
+page-orders-history {
+    h2{
+        color: white;
+    }
+    ion-item-divider{
+        border-bottom: 2px solid white;
+    }
+    .spinner svg, ion-spinner *,.spinner-md-crescent circle {
+        width: 48px;
+        height: 48px;
+        stroke: #59bd84;
+    }
+    .id-hyperlink{
+        text-decoration: underline;
+    }
+}

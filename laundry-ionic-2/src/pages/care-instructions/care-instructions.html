@@ -1,0 +1,74 @@
+ <ion-header>
+  <ion-navbar color="secondary">
+    <button ion-button menuToggle>
+      <img src="./assets/images/burger_menu.png" alt="" style =" width:15px; height: 15px;">
+    </button>
+    <ion-title color="primary">Care Instructions</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding id="careIns">
+<ion-row>
+  <div class="heading">
+      <ion-item-divider class="fill-bg"
+                        style=" display: block;margin: 0 auto;
+                                padding-top: 5px; 
+                                padding-bottom: 5px; 
+                                border-bottom: 0px">
+        <div
+        style="padding: 10px; 
+              background: url('./assets/images/heading_bg.png');  
+              text-align: center;
+              background-size: 100%; 
+              background-repeat: no-repeat;
+              background-position: center;
+              width: 100%; 
+              height: 100%;"
+                                    
+                                    color="secondary">
+        <p color="secondary">LAUNDERED SHIRTS</p>
+        </div>
+      </ion-item-divider>
+      <ion-item-divider class="myBg">
+        <div class="ParentDiv1">
+          <textarea name="launderedShirts" [ngModel]="laundered" (ngModelChange)="onTextEnter($event, 'ls')" maxlength="500" #launderedShirts cols="30" rows="6" placeholder="Enter care instructions (Optional)"></textarea>
+          <span class="counter">{{ 500 - charcount.ls }}</span>
+        </div>
+      </ion-item-divider>
+    </div>
+
+</ion-row>
+
+    <div class="heading">
+      <ion-item-divider class="fill-bg"
+                        style="
+                                padding-top: 5px; 
+                                padding-bottom: 5px; 
+                                border-bottom: 0px">
+        <div 
+        style="padding: 10px; 
+              background: url('./assets/images/heading_bg.png');  
+              text-align: center;
+              background-size: 100%; 
+              background-repeat: no-repeat;
+              background-position: center;
+              width: 100%; 
+              height: 100%;"
+                                    
+                                    color="secondary">
+        <p color="secondary">DRY CLEANING</p>
+        </div>
+      </ion-item-divider>
+      <ion-item-divider class="myBg">
+        <div class="ParentDiv1">
+          <textarea name="dryCleaning" maxlength="500" [ngModel]="dryCleanining" (ngModelChange)="onTextEnter($event, 'dc')" #dryCleaning cols="30" rows="6" placeholder="Enter care instructions (Optional)"></textarea>
+          <span class="counter">{{ 500 - charcount.dc }}</span>
+        </div>
+      </ion-item-divider>
+    </div>
+</ion-content>
+<ion-footer color="secondary" style="padding: 10px">
+        <button ion-button full style="height: 50px" (click)="startNextScreen(launderedShirts.value, dryCleaning.value)">
+        <p style="font-size: 20px;" color="secondary">Next</p>
+        </button>
+</ion-footer>

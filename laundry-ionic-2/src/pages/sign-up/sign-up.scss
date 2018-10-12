@@ -1,0 +1,60 @@
+page-sign-up {
+    .main-logo{
+        height: 15vh;
+        display: block;
+        margin: 1vh auto;
+    }
+    .sign-up-input-fields{
+        padding: 0;
+        background-color: #1F2C27 ;
+        opacity: 0.75;
+        margin: 2% auto 2% auto;
+        width: 90%;
+        .sign-up-input{
+            padding: 15px 25px;
+            width: 90%;
+            background: #1F2C27;
+            border: none;
+            color: white;
+            font-size: 20px;
+        }
+        .ng-valid{
+            color: color($colors, primary);
+        }
+        .ng-invalid{
+            color: color($colors, danger);
+        }
+        .sign-up-icon{
+            color: white;
+            font-size: 22px;
+            margin-left: 2%;
+        }
+        .center{
+            width: 20px!important;
+            height: auto!important;
+        }
+        ::-webkit-input-placeholder, 
+        :-moz-placeholder,
+        ::-moz-placeholder,
+        :-ms-input-placeholder{
+            text-align: center!important;
+        }
+    }
+    input[type="date"]:before {
+        content: attr(placeholder) !important;
+        color: #aaa;
+        margin-right: 0.5em;
+    }
+    input[type="date"]:focus:before,
+    input[type="date"]:valid:before {
+        content: "";
+    }
+    .error{
+            margin: 0 auto;
+            text-align: center;
+            color: color($colors, danger);
+    }
+    .fb-logo, .google-logo{
+        height: 10vh;
+    }
+}

@@ -1,0 +1,31 @@
+<ion-header class="Header-inner">
+  <ion-navbar color = "header">
+    <button ion-button menuToggle>
+      <img src="./assets/images/burger_menu.png" alt="" style =" width:15px; height: 15px;">
+    </button>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="fill-bg congratulation">
+  <div class="upper-box">
+    <h3>CONGRATULATIONS</h3>
+    <p>Your order has been placed successfully</p>
+  </div>
+
+  <div class="notification" *ngIf="false">
+    <button (click)="done()" >
+      <img src="./assets/images/notification_icon.png" alt="">
+      <p>Send notification for this order</p>
+    </button>
+  </div>
+  <div class="track">
+    <h4>TRACK ORDER</h4>
+    <img src="./assets/gifs/Order-Placed-animation.gif" alt="">
+  </div>
+</ion-content>
+
+<ion-footer color="secondary" style="padding: 10px">
+  <button ion-button full style="height: 50px" (click)="startNextScreen()">
+    <p style="font-size: 20px;" color="secondary">Check Orders History</p>
+  </button>
+</ion-footer>

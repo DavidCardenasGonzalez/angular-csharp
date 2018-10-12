@@ -1,0 +1,38 @@
+
+.additional-info-modal-styling{
+
+    width: 50%;
+    height: 50%;
+    margin: 0 auto;
+    background-color:darkred; 
+    ion-item-divider{
+        color: white;
+    }
+    ion-content{
+        height: 1000px;  
+    }
+    
+}
+.button-icon-size{
+    width: 30px;
+    height: 35px;
+    margin-bottom: 2%;
+}
+
+
+ion-item#address{
+    white-space: wrap; 
+    overflow: hidden;  
+    text-overflow: inherit;
+        overflow: visible;
+    :hover{
+        color: color($colors, primary);
+        
+    }
+}
+
+    .popover-content{
+        top:  -100%;
+    }
+
+
