@@ -1,35 +1,40 @@
-import { Component, 
-         ElementRef, 
-         ViewChild, 
-         AfterViewInit 
-        } from '@angular/core';
-import { NavController, 
-         NavParams, 
-         PopoverController, 
-         Popover, 
-         AlertController,
-         ToastController,
-         Platform
-       } from 'ionic-angular';
-import { 
-         Http, 
-         Headers, 
-         RequestOptions
-       } from '@angular/http'; 
-import { GoogleMaps, 
-         GoogleMap, 
-         GoogleMapsEvent,
-         LatLng,
-         CameraPosition,
-         MarkerOptions,
-         Marker   
-        } from "@ionic-native/google-maps";             
-// import { Geolocation } from 'ionic-native';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit
+} from '@angular/core';
+import {
+  NavController,
+  NavParams,
+  PopoverController,
+  Popover,
+  AlertController,
+  ToastController,
+  Platform
+} from 'ionic-angular';
+import {
+  Http,
+  Headers,
+  RequestOptions
+} from '@angular/http';
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  LatLng,
+  CameraPosition,
+  MarkerOptions,
+  Marker
+} from "@ionic-native/google-maps";
+import { Geolocation } from '@ionic-native/geolocation';
 import { MapService } from './map.service';
 import { Observable } from 'rxjs/Observable';
 import { Storage } from '@ionic/storage';
 import { AndroidPermissions } from "@ionic-native/android-permissions";
+import * as _ from 'underscore';
 
+import 'rxjs/add/operator/debounceTime';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/observable/fromEvent';
@@ -48,297 +53,178 @@ import { PreGenModel } from "../../models/preGen.model";
 
 import { globalVars } from "../../app/globalvariables";
 
-// declare var google;
+declare var google;
 
 @Component({
   selector: 'laundry-map',
   templateUrl: 'map.template.html',
   providers: [
-    MapService, 
+    MapService,
     GoogleMaps,
-    // Geolocation,
-    AuthService, 
+    AuthService,
     AndroidPermissions,
-    AlertDialogFactory, 
+    AlertDialogFactory,
     SavedLocationService]
 })
 
 
-export class LaundryMap implements AfterViewInit{
-    @ViewChild('search') button: ElementRef;
-    // @ViewChild('map') mapElement: ElementRef;
-    mapElement: HTMLElement = ViewChild('map');
-    
-    zoom: number = 10;
-    saved :boolean;
-    addition : boolean;
-    save : boolean;
-    available_locations: Array<Object> = []
-    isModalVisible : boolean;
-    popOver : Popover;
-    postion : any;
-    preGenData: PreGenModel;
-    address: string; 
-    lat: number; 
-    lng: number;
-    
-    locationAlias: string;
-    inputFieldValue: string = '';
-    addressResponse: any;
-    userID: string;
-    token: string;
-    mapLoadErr: any;
-    additionalInfoText: string;
-    marker;
+export class LaundryMap implements AfterViewInit {
+  @ViewChild('search') button: ElementRef;
+  // @ViewChild('map') mapElement: ElementRef;
+  //mapElement: HTMLElement = ViewChild('map');
+  @ViewChild('map') mapElement: ElementRef;
+  map: any;
+  searchTextBox = "";
+  zoom: number = 10;
+  saved: boolean;
+  addition: boolean;
+  save: boolean;
+  available_locations: Array<Object> = []
+  isModalVisible: boolean;
+  popOver: Popover;
+  postion: any;
+  preGenData: PreGenModel;
+  address = {
+    number: '',
+    street: '',
+    suburb: '',
+    city: '',
+    state: '',
+    country: '',
+    zipcode: '',
+  };
+  lat: number;
+  lng: number;
 
-    map: GoogleMap;
-    LatLong: LatLng = new LatLng(43.0741904,-89.3809802);
-    constructor(private storage: Storage,
-                private platform: Platform,
-                private navParams: NavParams,
-                private googleMaps: GoogleMaps, 
-                private navCtrl: NavController,
-                private mapService: MapService,
-                // private geolocation: Geolocation,
-                private authService: AuthService,
-                private alertCtrl: AlertController,
-                private popoverCtrl: PopoverController,
-                private alertCntrl: AlertDialogFactory,
-                private toastController: ToastController,
-                private adroidPermissions: AndroidPermissions,
-                private savedLocationsService: SavedLocationService,
-                ){
-      // this.marker = new google.maps.Marker(null);
-      this.token = localStorage.getItem('x-access-token');
-      this.userID = localStorage.getItem('userID');
-      this.preGenData = navParams.get('preGenData');
-      // this.createPreGen(this.preGenApiURL, this.token);
+  locationAlias: string;
+  inputFieldValue: string = '';
+  addressResponse: any;
+  userID: string;
+  token: string;
+  mapLoadErr: any;
+  additionalInfoText: string;
+  marker;
+
+  LatLong: LatLng = new LatLng(43.0741904, -89.3809802);
+  constructor(private storage: Storage,
+    private platform: Platform,
+    private navParams: NavParams,
+    private googleMaps: GoogleMaps,
+    private navCtrl: NavController,
+    private mapService: MapService,
+    private geolocation: Geolocation,
+    private authService: AuthService,
+    private alertCtrl: AlertController,
+    private popoverCtrl: PopoverController,
+    private alertCntrl: AlertDialogFactory,
+    private toastController: ToastController,
+    private adroidPermissions: AndroidPermissions,
+    private savedLocationsService: SavedLocationService,
+  ) {
+    // this.marker = new google.maps.Marker(null);
+    this.token = localStorage.getItem('x-access-token');
+    this.userID = localStorage.getItem('userID');
+    this.preGenData = navParams.get('preGenData');
+    // this.createPreGen(this.preGenApiURL, this.token);
   }
   ngAfterViewInit() {
-    console.log("ngAfterViewInit", this.LatLong);
-    
     this.platform.ready().then(() => {
       this.loadMap();
     });
-    this.listenToSearchInput();
-    this.getMapLocation(location);
   }
   ionViewDidLoad() {
+    var input = document.getElementById('search');
+    var input$ = Observable
+      .fromEvent(input, 'keyup')
+      .debounceTime(1000)
+    input$.subscribe(x => this.autocompleteLocation());
     // this.getCurrentPosition();
-    this.loadMap();
   }
 
-  
-  
-  listenToSearchInput() {
-    let location: string;
-    let latLng;
-    console.log('location1:', location)
-    let searchInput$ = Observable.fromEvent(this.button.nativeElement, 'keyup')
-      .map(e => location = e['srcElement'].value.trim())
-      .distinctUntilChanged()
-      .switchMap(() => this.mapService.getJSON(location, latLng))
-    searchInput$.subscribe(location => {
-      this.available_locations = location;
-      console.log(this.available_locations);
-    })
+  setPositionByLocation(lat, lng, movemap?) {
+    this.mapService.reverseGeocoding(lat, lng)
+      .subscribe(res => {
+        var formatedAddress = _.find(res, function (adr) { return adr.types.some(x => x == "street_address") });
+
+        var number = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "street_number") });
+        var street = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "route") });
+        var suburb = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "sublocality" || x == "sublocality_level_1") });
+        var city = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "locality") });
+        var state = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "administrative_area_level_1") });
+        var country = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "country") });
+        var zipcode = _.find(formatedAddress.address_components, function (adr) { return adr.types.some(x => x == "postal_code") });
+        this.address = {
+          number: number ? number.long_name : '',
+          street: street ? street.long_name : '',
+          suburb: suburb ? suburb.long_name : '',
+          city: city ? city.long_name : '',
+          state: state ? state.long_name : '',
+          country: country ? country.long_name : '',
+          zipcode: zipcode ? zipcode.long_name : '',
+        };
+        if(movemap){
+          this.map.setCenter({lat:lat, lng:lng})
+        }
+        this.searchTextBox = this.address.street + ' ' + this.address.number;
+      },
+        err => {
+          console.log(err);
+        })
   }
 
-
-  getMapLocation(location) {
-    if (location) {
-      let latLng;
-      let location$ = this.mapService.getJSON(location, latLng)
-
-      location$.subscribe(res => console.log)
-
+  autocompleteLocation() {
+    if (this.searchTextBox.length > 3) {
+      let location$ = this.mapService.getJSON(this.searchTextBox)
+      location$.subscribe(location => {
+        this.available_locations = location.map(function (dir) {
+          return {
+            name: dir.name,
+            description: dir.formatted_address,
+            lat: dir.geometry.location.lat,
+            lng: dir.geometry.location.lng,
+          }
+        }
+        );
+      })
     }
   }
 
-  // getCurrentPosition(){
-  //   Geolocation.getCurrentPosition()
-  //     .then(
-  //       position => {
-  //         console.log('No error');
-          
-  //         this.postion = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  //         // this.addMarker();
-  //       },
-  //       err => {
-  //         console.log("Error", err);
-  //         if(err.code == 1){
-  //           this.alertCntrl.openAlertDialog("Location Error?","Please turn on location from settings.");
-  //         }
-  //       }
-  //     )
-  // }
-
   loadMap() {
-    let element:  HTMLElement = ViewChild('map');
-    console.log("load map called");
-  	// Geolocation.getCurrentPosition().then((position) => {
-	  //   this.postion = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    //   console.log(this.postion);
-      
+    this.geolocation.getCurrentPosition().then((position) => {
+      this.setPositionByLocation(position.coords.latitude, position.coords.longitude);
+      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       let mapOptions = {
-          center: this.LatLong,
-          zoom: 15,
-          styles: [
-            { elementType: 'geometry', stylers: [{ color: '#15151b' }] },
-            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-            {
-              featureType: 'administrative',
-              elementType: 'labels',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'labels',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'geometry',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'poi.park',
-              elementType: 'labels.text.fill',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'road',
-              elementType: 'geometry',
-              stylers: [{ color: '#000000' }]
-            }
-            // #38414e
-            ,
-            {
-              featureType: 'road',
-              elementType: 'geometry.stroke',
-              stylers: [{ color: '#000000' }]//212a37
-            },
-            {
-              featureType: 'road',
-              elementType: 'labels.text.fill',
-              stylers: [{ color: '#ffffff' }]//9ca5b3
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{ color: '#000000' }]//746855
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry.stroke',
-              stylers: [{ color: '#1f2835' }]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'labels.text.fill',
-              stylers: [{ color: '#f3d19c' }]
-            },
-            {
-              featureType: 'transit',
-              elementType: 'all',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'transit.station',
-              elementType: 'labels.text.fill',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{ color: '#17263c' }]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.fill',
-              stylers: [{ visibility: 'off' }]
-            },
-            {
-              featureType: 'water',
-              elementType: 'labels.text.stroke',
-              stylers: [{ visibility: 'off' }]
-            }
-          ],
-          // mapTypeId: google.maps.MapTypeId.ROADMAP,
-          backgroundColor: 'black',
-          gestureHandling: 'cooperative'
-        }
+        center: latLng,
+        zoom: 17,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+      }
 
-      this.map = this.googleMaps.create(element);
-      // this.map = this.googleMaps.create(this.mapElement, mapOptions);
-      console.log(JSON.stringify(this.map));
-      // listen to MAP_READY event
-    // You must wait for this event to fire before adding something to the map or modifying it in anyway
-      this.map.one(GoogleMapsEvent.MAP_READY).catch(
-        () => {
-          console.log('Map is ready');
-          // Now you can add elements to the map like the marker
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      var that = this;
+      this.map.addListener('idle', function() {
+          var center = that.map.getCenter();
+          that.setPositionByLocation(center.lat(), center.lng());
       });
 
-      this.map.getMyLocation().then(
-      location => {
-        console.log(JSON.stringify(location));
-        
-        this.map.moveCamera(location.latLng);
-        let markerOptions: MarkerOptions = {
-          position: this.LatLong,
-          title: ''
-        };
-
-        const marker = this.map.addMarker(markerOptions).then(() => {
-
-        })
-      }).catch(
-          err => {
-            console.log(JSON.stringify(err), 'Error occurred.');
-          });
+      // let marker = new google.maps.Marker({
+      //   map: this.map,
+      //   animation: google.maps.Animation.DROP,
+      //   position: this.map.getCenter()
+      // });
+    },
+      err => {
+        console.log("Error", err);
+        if (err.code == 1) {
+          this.alertCntrl.openAlertDialog("Location Error?", "Please turn on location from settings.");
+        }
+      }
+    )
   }
-  
-  // addMarker() {
-  //   this.marker.setMap(null)
-  //   this.marker = new google.maps.Marker({
-  //     map: this.map,
-  //     animation: google.maps.Animation.drop,
-  //     // position: this.map.getCenter(),
-  //     draggable: false,
-  //     optimized: false, // <-- required for animated gif
-  //     position: this.postion,
 
-  //     icon: "./assets/gifs/ripple_marker_Orange.gif"
-	// 	});
-
-
-  //   let content = "<h4>Information!</h4>";
-
-  //   this.addInfoWindow(this.marker, content);
-
-  // }
-
-  addInfoWindow(marker, content) {
-
-    // let infoWindow = new google.maps.InfoWindow({
-    //   content: content
-    // });
-
-    // google.maps.event.addListener(marker, 'click', () => {
-    //   // infoWindow.open(this.map, marker);
-    //   console.log("Pin drop");
-    // });
-
-  }
 
   savedButtonClicked(myEvent) {
     this.saved = this.saved ? false : true;
-    // console.log("savedButtonClicked");
-    
-    // this.addition=this.addition?false:true;
-    // this.openSavedLocationModal(myEvent);
     let inputs;
     let URL = globalVars.getUsersAddress(this.userID);
     this.authService.getCall(URL).
@@ -346,47 +232,42 @@ export class LaundryMap implements AfterViewInit{
         console.log(JSON.parse(res["_body"]));
         inputs = JSON.parse(res["_body"])["data"]["contact"]["address"];
         console.log(inputs);
-        // let result = this.alertCntrl.checkBoxAlertDialog("Saved Locations", inputs)
-        // console.log(result);
-        
         this.checkBoxAlertDialog("Saved Locations", inputs)
 
 
 
       })
-    
+
   }
 
-  checkBoxAlertDialog(title: string, inputs){
-        let alert = this.alertCtrl.create({
-            title: title,
-        });
+  checkBoxAlertDialog(title: string, inputs) {
+    let alert = this.alertCtrl.create({
+      title: title,
+    });
 
-        inputs.forEach(input => {
-            alert.addInput({
-                type: 'radio',
-                label: input.alias,
-                value: input,
-                checked: false
-            });
-        });
-        alert.addButton('Cancel');
-        alert.addButton({
-            text: 'Okay',
-            handler: data => {
-                console.log('Checkbox data:', data);
-                // this.testCheckboxOpen = false;
-                // this.testCheckboxResult = data;
-            }
-        });
-        alert.present();
-        alert.onDidDismiss((data) => {
-          console.log(data);
-            data ? 
-              this.locationClicked(data[0]) : null;
-        });
+    inputs.forEach(input => {
+      alert.addInput({
+        type: 'radio',
+        label: input.alias,
+        value: input,
+        checked: false
+      });
+    });
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'Okay',
+      handler: data => {
+        console.log('Checkbox data:', data);
+      }
+    });
+    alert.present();
+    alert.onDidDismiss((data) => {
+      console.log(data);
+      data ?
+        this.locationClicked(data[0]) : null;
+    });
 
-    }
+  }
   openSavedLocationModal(myEvent) {
     let popover = this.popoverCtrl.create(SavedLocations, { address: this.addressResponse }, { showBackdrop: true });
     popover.present({
@@ -394,15 +275,13 @@ export class LaundryMap implements AfterViewInit{
     });
     this.saved = this.saved ? false : true;
     popover.onDidDismiss(popoverAddress => {
-      console.log(popoverAddress);
-      popoverAddress ? 
+      popoverAddress ?
         this.locationClicked(popoverAddress) : '';
     });
   }
 
   saveButtonClicked() {
     this.save = this.save ? false : true;
-    console.log("saveButtonClicked");
     let userID = localStorage.getItem("userID");
     let URL = globalVars.UserAddress(userID);
     let data = {
@@ -427,8 +306,7 @@ export class LaundryMap implements AfterViewInit{
       ev: myEvent
     });
     popover.onDidDismiss(data => {
-      if(data){
-        console.log(data);
+      if (data) {
         this.additionalInfoText = data + "\n";
         localStorage.setItem("additionalInfoText", this.additionalInfoText);
       }
@@ -442,46 +320,20 @@ export class LaundryMap implements AfterViewInit{
   }
 
   locationClicked(location) {
-    console.log("You have clicked on: ", location);
-    
-    if(!!location){
-      if(!!location.formatted_address){
-        this.inputFieldValue = location.formatted_address;
-        localStorage.setItem("Location", JSON.stringify(location));
-        this.lat = location.geometry.location.lat;
-        this.lng = location.geometry.location.lng;
+    this.setPositionByLocation(location.lat, location.lng, true);
+    this.available_locations = [];
+  };
 
-        this.address = location.formatted_address;
-        this.locationAlias = location.name;
-      }      
-    }else{
-      this.inputFieldValue = location.address;
-      localStorage.setItem("Location", JSON.stringify(location));
-      this.lat = location.lat;
-      this.lng = location.long;
-      this.address = location.address;
-      this.locationAlias = location.alias;
-    };
-    
-    //gMap = new google.maps.Map(document.getElementById('map')); 
-    // this.postion =  new google.maps.LatLng(this.lat, this.lng);
-    // this.map.setCenter(this.postion);
-    // this.addMarker();
-    // this.map.center = new google.maps.LatLng(this.lat, this.lng);
-  }
-
-  validate():boolean
-  {
-    return (this.lat != null && this.lng != null && this.address != null) ? true :false;
+  validate(): boolean {
+    return (this.lat != null && this.lng != null && this.address != null) ? true : false;
   }
   startNextScreen() {
     console.log("Next clicked!");
-    let valid:boolean  = this.validate();
+    let valid: boolean = this.validate();
     console.log(valid);
 
-    if(valid === true)
-    {
-    console.log(this.preGenData);
+    if (valid === true) {
+      console.log(this.preGenData);
       this.navCtrl.push(LaundryItems, {
         preGenData: this.preGenData,
         pickupDetails: {
@@ -495,24 +347,24 @@ export class LaundryMap implements AfterViewInit{
       });
     }
     else
-      this.alertCntrl.openAlertDialog("What's missing?","No location selected.");
-    
-      // Temporary hack Delete it
-      console.log(this.preGenData);
-      this.navCtrl.push(LaundryItems, {
-        preGenData: this.preGenData,
-        pickupDetails: {
-          location: {
-            lat: this.lat,
-            lng: this.lng,
-            address: this.address
-          }
-        },
+      this.alertCntrl.openAlertDialog("What's missing?", "No location selected.");
 
-      });
+    // Temporary hack Delete it
+    console.log(this.preGenData);
+    this.navCtrl.push(LaundryItems, {
+      preGenData: this.preGenData,
+      pickupDetails: {
+        location: {
+          lat: this.lat,
+          lng: this.lng,
+          address: this.address
+        }
+      },
+
+    });
   }
-  presentToast(){
-    
+  presentToast() {
+
   }
 }
 

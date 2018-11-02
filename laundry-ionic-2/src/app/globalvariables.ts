@@ -1,10 +1,10 @@
 export const globalVars =  {
 
-    // BaseURL: "http://localhost:3000", 
+    BaseURL: "http://localhost:50679", 
     // BaseURL: "http://192.168.0.108:3000",
     // BaseURL: "http://stage.dmenu.co:3005",
-    BaseURL: "http://107.170.45.205:3000",
-    LaundryitemsURL: "/api/v1/laundryItems",
+    //BaseURL: "http://107.170.45.205:3000",
+    LaundryitemsURL: "/api/laundryItem",
     getLaundryitemsApiURL(){
         return ((this.BaseURL + this.LaundryitemsURL) as string);
     },
@@ -16,7 +16,7 @@ export const globalVars =  {
     PreGenApiURL(userID){
         return this.BaseURL + this.OrderURL + this.PreGenURL + userID;
     },
-    OrderURL: "/api/v1/orders/",
+    OrderURL: "/api/order/",
     getOrderByIdURL(orderID){
         return this.BaseURL + this.OrderURL + orderID;
     },
@@ -63,7 +63,7 @@ export const globalVars =  {
     NotificationSettingsURL(userID){
         return this.BaseURL + this.AllUsers + '/' + userID + this.NotificationURL;
     },
-    SignInURL: '/api/v1/auth/local',
+    SignInURL: '/connect/token',
     PostSignInApi(){
         return (this.BaseURL + this.SignInURL as string);
     },

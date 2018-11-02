@@ -57,6 +57,9 @@ namespace Quick_Application1.ViewModels
 
             CreateMap<Order, OrderViewModel>()
                 .ReverseMap();
+
+            CreateMap<Laundryitem, LaundryitemViewModel>()
+          .ReverseMap();
         }
     }
 }

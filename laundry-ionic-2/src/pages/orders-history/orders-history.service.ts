@@ -7,18 +7,18 @@ export /**
  * OrdersHistoryService
  */
 class OrdersHistoryService {
-    headers: Headers;
+    //headers: Headers;
     options: RequestOptions;
 
     constructor(private http: Http, 
     private storage: Storage,
     private jwtHelper: JwtHelper) {
-        this.headers = new Headers({
-                    'x-access-token': this.storage.get('authToken')
-            });
-            this.options = new RequestOptions({
-                    headers: this.headers
-            });
+        // this.headers = new Headers({
+        //             'x-access-token': this.storage.get('authToken')
+        //     });
+        //     this.options = new RequestOptions({
+        //             headers: this.headers
+        //     });
     }
    
     getOrdersHistory = (URL, token) =>{

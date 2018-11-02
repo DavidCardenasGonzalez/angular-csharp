@@ -17,6 +17,7 @@ namespace DAL
     {
         readonly ApplicationDbContext _context;
 
+        ILaundryitemRepository _laundryItems;
         ICustomerRepository _customers;
         IProductRepository _products;
         IOrdersRepository _orders;
@@ -38,6 +39,17 @@ namespace DAL
                     _customers = new CustomerRepository(_context);
 
                 return _customers;
+            }
+        }
+
+        public ILaundryitemRepository LaundryItems
+        {
+            get
+            {
+                if (_laundryItems == null)
+                    _laundryItems = new LaundryitemRepository(_context);
+
+                return _laundryItems;
             }
         }
 

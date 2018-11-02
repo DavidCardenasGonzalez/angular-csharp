@@ -3,23 +3,18 @@
 // Email: support@ebenmonney.com
 // ====================================================
 
-using DAL.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL
+namespace DAL.Models
 {
-    public interface IUnitOfWork
+    public class Laundryitem : AuditableEntity
     {
-        ICustomerRepository Customers { get; }
-        IProductRepository Products { get; }
-        IOrdersRepository Orders { get; }
-        ILaundryitemRepository LaundryItems { get; }
-
-
-        int SaveChanges();
-    }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime DateCreated { get; set; }
+     }
 }

@@ -22,6 +22,7 @@ import { globalVars } from './../../app/globalvariables';
   providers: [SignInService, Storage, JwtHelper, User, Facebook, GooglePlus]
 })
 export class SignInPage implements OnInit {
+  idToken: any;
   signInForm: FormGroup;
   token: string;
   submitted = false;
@@ -127,19 +128,21 @@ export class SignInPage implements OnInit {
     let URL = globalVars.PostSignInApi();
     this.signInService.signInUser(URL, data).subscribe(
       res => {
-          
           if(res.status == 200){
               console.log(res['_body']);
               console.log(res['_body']);              
-              this.token = JSON.parse(res['_body'])['token'];
-              let userID = this.jwtHelper.decodeToken(this.token);
-              localStorage.setItem('x-access-token',this.token);   
-              localStorage.setItem('userID',this.jwtHelper.decodeToken(this.token)['_id']);
+              this.token = JSON.parse(res['_body'])['access_token'];
+              this.idToken = JSON.parse(res['_body'])['id_token'];
+              let userID = this.jwtHelper.decodeToken(this.idToken);
+              console.log(userID);
+              
+              localStorage.setItem('x-access-token',this.idToken);   
+              localStorage.setItem('userID',this.jwtHelper.decodeToken(this.idToken)['sub']);
               this.user.saveUserId(userID);
-              console.log(userID._id);
-              localStorage.setItem('userID', userID._id);
-              this.user.saveUserAccessToken(this.token);
-              console.log(userID._id);
+              console.log(userID.sub);
+              localStorage.setItem('userID', userID.sub);
+              this.user.saveUserAccessToken(this.idToken);
+              console.log(userID.sub);
               // this.user.scheduleRefresh(this.token);
               this.navCtrl.setRoot(OrdersHistoryPage);
           }

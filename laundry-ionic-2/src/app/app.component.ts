@@ -10,7 +10,7 @@ import { BackgroundGeolocation,
          BackgroundGeolocationConfig } from '@ionic-native/background-geolocation';
 
 
-// import { LaundryMap } from '../pages/map/map.component';
+//import { LaundryMap } from '../pages/map/map.component';
 import { ProfileComponent } from '../pages/profile/profile';
 import { NotificationComponent } from '../pages/notifications/notifications';
 import { RatesListComponent } from '../pages/rates-list/rates-list'
@@ -20,7 +20,7 @@ import { ComplaintsSuggestionsPage } from '../pages/complaints-suggestions/compl
 import { PaymentMethodsPage } from '../pages/payment-methods/payment-methods';
 import { ForgotPasswordPage } from '../pages/forgot-password/forgot-password';
 // import { SpinnerDialog } from '@ionic-native/spinner-dialog';
-import { IonicNativeMapPage } from "../pages/ionic-native-map/ionic-native-map";
+//import { IonicNativeMapPage } from "../pages/ionic-native-map/ionic-native-map";
 import { User } from './user';
 import { AuthService } from "./../auth/auth.service";
 import { globalVars } from "./globalvariables"

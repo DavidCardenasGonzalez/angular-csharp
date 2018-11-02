@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { ServicesPage } from '../services/services';
 import { LaundryItemsService } from './laundryitems.service';
-import { LaundryItemModel } from '../../models/laundryitem.model';
+import { LaundryItemData } from '../../models/laundryitem.model';
 import { globalVars } from '../../app/globalvariables';
 import { PreGenModel } from '../../models/preGen.model';
 import { AuthService } from "../../auth/auth.service";
@@ -23,7 +23,7 @@ export class LaundryItems implements OnInit{
   selectedItem: any;
   icons: string[];
   titles: string[];
-  laundryitems : LaundryItemModel;
+  laundryitems : Array<LaundryItemData> = [];;
   responseArray : Array<Object> = [];
   preGenData: PreGenModel;
   params : Array<Object> = [];
@@ -33,6 +33,7 @@ export class LaundryItems implements OnInit{
   refreshController : any;
   hideActivityLoader: boolean;
   grandTotalItemCount: number = 0;
+  orderItems: any[] = [];
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private items_Service: LaundryItemsService, 
@@ -59,15 +60,16 @@ export class LaundryItems implements OnInit{
     this.authService.getCall(URL)
     .subscribe(res => {
       if(res.status == 200) {
-        let response = JSON.parse(res['_body']);
-        console.log(response);
-         
-          this.laundryitems = {
-            href : response["href"],
-            data : response["data"]
-          }
-          console.log('final laundry items: ', this.laundryitems)
-          this.maplaundryitems(this.laundryitems.data);
+          this.laundryitems =  JSON.parse(res['_body']);;
+          console.log(this.laundryitems)
+          this.orderItems = this.laundryitems.map(x=>{
+            return {
+              name : x.name,
+              icon: 'kc-jeans',
+              quantity: 0
+            }
+          })
+          //this.maplaundryitems(this.laundryitems);
         }
         
     },error=>{
@@ -94,116 +96,31 @@ hideActivityLoaders(){
   
    this.refreshController = refresher;
   }
-upperBody = ["Kandura-Summer", "Ghutra",      "Shirt",         "T-Shirt", 
-  "Jacket",         "Safari Suit", "Men's Suit",    "Pakistani Suit", 
-  "Sweater",        "Coat",        "Long Coat",     "Tie",
-  "Cap",            "Under Shirt", "Night Gown",    "Abaya",
-  "Bed Sheet",      "Ladies Suit", "Saree",         "Blouse",
-  "Dress",          "Dress",       "Dress Wedding", "Dress Child",
-  "Shela",          "Apron"];
-lowerBody = ["Jeans", "Trouser", "Under Shorts", "Lungi", 
-  "Pyjama", "Socks", "Short Skirt", "Long Skirt",
-  "Shalwar Kameez", "Uniform", "Dress Child", "Blanket Large",
-  "Blanket Small", "Bed Sheel (L)", "Bed Cover", "Curtains", 
-  "Table Cloth", "Pillow Cover", "Towel Big", "Towel Medium", 
-  "Towel Small", "Carpet"];
-maplaundryitems(data){
 
-  this.responseArray= [];
-  data.forEach(element => {
-   let pseudoIcon = this.upperBody.findIndex( obj => obj == element.name) != -1 ? "kc-jacket" : "kc-jeans"
-   let mappedObject =  {
-    object_id: element.object_id, 
-    name: element.name,
-    icon: element.icon,
-    rate: element.rate,
-    count: 0,
-    amount:0,
-    toWash:true,
-    toDry:false,
-    pIcon: pseudoIcon
-    }
-    this.responseArray.push(mappedObject);
-  });
-
-}
 // increment product qty
-  incrementQty(item,index) {
-    item.count++;
-    this.grandTotalItemCount++;
-    this.calculateTotalAmount(item);
-
-    console.log("totalQuantity = ",item.count , "totalAmount = ",item.amount);
-     
-    if(this.params.indexOf(item) <= -1){
-      this.params.push(item);
-      console.log("params", this.params);
-    }
+  incrementQty(item) {
+    item.quantity++;
   }
 
   // decrement product qty
-  decrementQty(item,index) {
-    this.grandTotalItemCount = this.grandTotalItemCount < 1 ? 0 : --this.grandTotalItemCount;
-    if(item.count < 1 ){
-      console.log("wash = " , item.rate.wash ,"totalQuantity = ",item.count , "totalAmount = ",item.amount);
-      item.count = 0;
-      item.amount   = 0;
-      
+  decrementQty(item) {
+    item.quantity--;
+  }
 
-      if(this.params.indexOf(item) > -1)
-      this.params.splice(this.params.indexOf(item),1);
+// addWashingAmountToTotal(item) : number{
 
-    }else{
-      item.count--;
-      
-      this.calculateTotalAmount(item);
+//    return item.rate.wash * item.count  ;
+// }
+// addDryCleaningAmountToTotal(item) :number{
+
+//   return item.rate.dryclean *item.count  ;
+// }
+totalAmount(){
+  return this.orderItems.reduce(function(sum,obj){
+    return obj.quantity + sum;
+  },0)
    
-    }
-
-    console.log("totalAmount after = ",item.amount);
-  }
-
-addWashingAmountToTotal(item) : number{
-
-   return item.rate.wash *item.count  ;
 }
-addDryCleaningAmountToTotal(item) :number{
-
-  return item.rate.dryclean *item.count  ;
-}
-calculateTotalAmount(item){
-
- 
-  if(item.toWash && item.toDry)
-      item.amount =   this.addWashingAmountToTotal(item) +  this.addDryCleaningAmountToTotal(item);
-  else if(item.toDry)
-       item.amount =  this.addDryCleaningAmountToTotal(item);
-  else
-      item.amount =   this.addWashingAmountToTotal(item) ;
-
-}
-  wash(item)
-  {
-     
-     console.log(item.toDry);
-     if(item.toWash && item.toDry == false){
-       item.toWash = true;
-     }else{
-      item.toWash = !item.toWash;
-     }
-     this.calculateTotalAmount(item);
-     console.log('wash', item.toWash);
-  }
-  dry(item)
-  {
-     if(item.toDry == true && item.toWash == false){
-       item.toDry = true;
-     }else{
-       item.toDry = !item.toDry;
-     }
-     this.calculateTotalAmount(item);
-     console.log('dry', item.toDry);
-  }
 
  startNextScreen()
   {

@@ -1,115 +1,61 @@
 <ion-header>
   <ion-navbar color="header">
     <button ion-button menuToggle>
-      <img src="./assets/images/burger_menu.png" alt="" style =" width:15px; height: 15px;">
+      <img src="./assets/images/burger_menu.png" alt="" style=" width:15px; height: 15px;">
     </button>
     <ion-title color="primary">Laundary Items</ion-title>
   </ion-navbar>
- 
+
 </ion-header>
 
 <ion-content class="fill-bg">
-<div class="heading">
-  <ion-item-divider  class="fill-bg"
-                     style="padding-left: 10px;
-                            padding-right: 10px;
-                            padding-top: 5px; 
-                            padding-bottom: 5px; 
-                            border-bottom: 0px">
-    <div id="heading-bg" 
-    style="padding: 10px; 
-           background: url('./assets/images/heading_bg.png');  
-           text-align: center;
-           background-size: 100%; 
-           background-repeat: no-repeat;
-           background-position: center;
-           width: 100%; 
-           height: 100%;"
-                                 
-                                color="secondary">
-    <p color="secondary">WHAT YOU GOT TODAY?</p>
-    </div>
-  </ion-item-divider>
-</div>
-
-<!-- <ion-refresher (ionRefresh)="doRefresh($event)">
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher> -->
-  <div *ngIf="responseArray" class="list" >
-    <ion-list class="fill-bg itemlist" 
-              color="secondary"
-              style="border-bottom: 0px" >
-      <ion-item-divider
-              color="secondary"
-              *ngFor="let item of responseArray"
-              class=" fill-bg">
-        <ion-col class="fill-bg"
-                 style="background-color: transparent"
-                 item-left
-                 width-30>
-        <ion-icon [name]="item.icon" item-left></ion-icon>
+  <div *ngIf="orderItems" class="list">
+    <ion-list class="fill-bg itemlist" color="secondary" style="border-bottom: 0px">
+      <ion-list-header>
+        Total:  {{totalAmount()}}
+      </ion-list-header>
+      <ion-item-divider color="secondary" *ngFor="let item of orderItems" class=" fill-bg">
+        <ion-col class="fill-bg" style="background-color: transparent" item-left width-30>
+          <ion-icon [name]="item.icon" item-left></ion-icon>
           <table>
-              <tr>
-                  <td><img class="item-icon" src="./assets/images/{{item.pIcon}}.png" alt=""></td>
-                  <td>&nbsp; &nbsp;</td>
-                  <td><span class="center" style="text-align: justify;">{{ item.name }}</span></td>
-              </tr>
+            <tr>
+              <td><img class="item-icon" src="./assets/images/{{item.icon}}.png" alt=""></td>
+              <td>&nbsp; &nbsp;</td>
+              <td><span class="center" style="text-align: justify;">{{ item.name }}</span></td>
+            </tr>
           </table>
         </ion-col>
-        <ion-col class="item-col" 
-                 width-10 
-                 item-left>
-        <img src="assets/images/dec_icon.png" 
-             class="button-size" 
-             (click)="decrementQty(item,laundryitems.data.indexOf(item))" >
-      </ion-col>
-        <ion-col class="item-col" 
-                 style="max-width: 2em;" 
-                 item-left>
-        {{item.count}}
+        <ion-col class="item-col" width-10 item-left>
+          <img src="assets/images/dec_icon.png" class="button-size" (click)="decrementQty(item)">
         </ion-col>
-        
-        <ion-col class="fill-bg item-col" 
-                 width-10 
-                 item-left>
-        <img src="assets/images/inc_icon.png" 
-             class="button-size" 
-             (click)="incrementQty(item,laundryitems.data.indexOf(item))" >
-        </ion-col>
-        <ion-col class="fill-bg" 
-                 style="border-bottom: 0px"
-                 item-right
-                 width-10>
-          <button small 
-                  ion-button 
-                  [color] = "item.toWash?'primary':'header'" 
-                  id="wash" 
-                  (click)="wash(item)">W</button>
-        </ion-col>
-          <ion-col class="fill-bg" 
-                   style="margin-left:15px" 
-                   (click)="dry(item)" 
-                   item-right width-10>
-          <button small 
-                  ion-button 
-                  [color] = "item.toDry?'primary':'header'" 
-                  id="Dry">D</button>
+        <ion-col class="item-col" style="max-width: 2em;" item-left>
+          {{item.quantity}}
         </ion-col>
 
-        <ion-col  class="fill-bg" 
-                  style="min-width: 3em; text-align:center; margin-left: 20px" 
-                  item-right 
-                  width-20>
+        <ion-col class="fill-bg item-col" width-10 item-left>
+          <img src="assets/images/inc_icon.png" class="button-size" (click)="incrementQty(item)">
+        </ion-col>
+        <ion-col class="fill-bg" style="border-bottom: 0px" item-right width-10>
+          <button small ion-button [color]="item.toWash?'primary':'header'" id="wash" (click)="wash(item)">W</button>
+        </ion-col>
+        <ion-col class="fill-bg" style="margin-left:15px" (click)="dry(item)" item-right width-10>
+          <button small ion-button [color]="item.toDry?'primary':'header'" id="Dry">D</button>
+        </ion-col>
+
+        <ion-col class="fill-bg" style="min-width: 3em; text-align:center; margin-left: 20px" item-right width-20>
           {{item.amount}}
         </ion-col>
-        
+
       </ion-item-divider>
     </ion-list>
   </div>
-  
+ 
 </ion-content>
-<ion-footer color="secondary" style="padding: 10px" >
-        <button ion-button full style="height: 50px" (click)="startNextScreen()" [disabled] = "responseArray.length<=0?'disabled':''">
-        <p style="font-size: 20px;" color="secondary">Next</p>
-        </button>
+<ion-footer color="secondary" style="padding: 10px">
+  <button ion-button full style="height: 50px" (click)="startNextScreen()" [disabled]="orderItems.length<=0?'disabled':''">
+    <p style="font-size: 20px;" color="secondary">Next</p>
+  </button>
 </ion-footer>

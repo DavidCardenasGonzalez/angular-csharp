@@ -1,4 +1,4 @@
-interface LaundryItemData { 
+export interface LaundryItemData { 
     object_id: string, 
     name: string,
     icon: string,
@@ -6,11 +6,4 @@ interface LaundryItemData {
         wash: number,
         dryclean: number
     },
-    "x-access-token": string
-
-}
-
-export interface LaundryItemModel{
- href : string,
- data : Array<LaundryItemData>
 }

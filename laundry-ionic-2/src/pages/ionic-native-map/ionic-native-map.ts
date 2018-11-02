@@ -130,20 +130,20 @@ export class IonicNativeMapPage {
     this.hide = false;
     let location: string;
     console.log('location1:', location)
-    let searchInput$ = Observable.fromEvent(this.button.nativeElement, 'keyup')
-      .map(e => location = e['srcElement'].value.trim())
-      .distinctUntilChanged()
-      .switchMap(() => this.mapService.getJSON(location, this.latLng)) 
-    searchInput$.subscribe(location => {
-      this.available_locations = location;
-      console.log(this.available_locations);
-    })
+    // let searchInput$ = Observable.fromEvent(this.button.nativeElement, 'keyup')
+    //   .map(e => location = e['srcElement'].value.trim())
+    //   .distinctUntilChanged()
+    //   .switchMap(() => this.mapService.getJSON(location, this.latLng)) 
+    // searchInput$.subscribe(location => {
+    //   this.available_locations = location;
+    //   console.log(this.available_locations);
+    // })
   }
 
   getMapLocation(location, latLng) { 
     if (location) {
-      let location$ = this.mapService.getJSON(location, this.latLng);
-      location$.subscribe(res => console.log)
+      // let location$ = this.mapService.getJSON(location, this.latLng);
+      // location$.subscribe(res => console.log)
 
     }
   }
@@ -483,7 +483,7 @@ export class IonicNativeMapPage {
      // Now you can add elements to the map like the marker 
      map.setOptions(mapOptions); 
      map.setMyLocationEnabled(true); 
-     map.setBackgroundColor('black'); 
+     //map.setBackgroundColor('black'); 
      map.setPadding(0, 80, 150, 0); 
      this.latLng = this.getLocation(map); 
      map.setCompassEnabled(false);   
@@ -526,7 +526,7 @@ export class IonicNativeMapPage {
   }
   moveCamera(map, latLng: LatLng){ 
     // create CameraPosition 
-    let position: CameraPosition = { 
+    let position = { 
       target: latLng, 
       zoom: 16 
     }; 

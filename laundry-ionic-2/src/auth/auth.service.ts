@@ -6,7 +6,7 @@ import { AuthHttp,
 } from "angular2-jwt";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Rx";
-import { Http, RequestOptions, Headers } from "@angular/http";
+import { Http, RequestOptions, Headers,URLSearchParams } from "@angular/http";
 
 import { globalVars } from "./../app/globalvariables";
 
@@ -36,21 +36,30 @@ export class AuthService{
 
     postCall(SignInURL, userDetails){
         let token: string;
-        this.http.post(SignInURL, userDetails)
+        let idtoken: string;
+        
+        let header = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        let params = new URLSearchParams();
+        params.set('username', userDetails.username)
+        params.set('password', userDetails.password)
+        params.set('grant_type', 'password')
+        params.set('scope', 'openid email phone profile offline_access roles');        
+        this.http.post(SignInURL, params, { headers: header })
             .subscribe(
                 res => {
                     if(res.status == 200){
-                        token = JSON.parse(res['_body'])['token'];
+                        token = JSON.parse(res['_body'])['access_token'];
+                        idtoken = JSON.parse(res['_body'])['id_token'];
                         
-                        let userID = this.jwtHelper.decodeToken(token);
+                        let userID = this.jwtHelper.decodeToken(idtoken);
                         
-                        this.storage.set('x-access-token', token);
-                        localStorage.setItem('x-access-token', token);
+                        this.storage.set('x-access-token', idtoken);
+                        localStorage.setItem('x-access-token', idtoken);
                         
                         this.storage.set('user-id', userID)
-                        localStorage.setItem('userID', userID._id);
-                        
-                        console.log(userID._id);
+                        localStorage.setItem('userID', userID.sub);
+                    
+                        console.log(userID.sub);
                         // this.user.scheduleRefresh(this.token);
                     }
                 }
