@@ -79,63 +79,10 @@ export class PickUpDetails{
         
       }
      
-    //  toggleHighlight(Elementid: any, segment: string){
-    //     console.clear();
-    //     console.log(Elementid);
-    //     this.selectedDate[segment] = Elementid;
-    //     console.log(this.selectedDate);
-        
-        
-    //     segment === 'day' ? 
-    //         this.highlightedDay = this.highlightedDay === Elementid ? 0 : Elementid :
-    //     segment === 'hour' ? 
-    //         this.highlightedHour = this.highlightedHour === Elementid ? 0 : Elementid :
-    //     segment === 'minute' ? 
-    //         this.highlightedMinute = this.highlightedMinute === Elementid ? 0 : Elementid :
-    //     segment === 'amPm' ? 
-    //         this.highlightedAmPm = this.highlightedAmPm === Elementid ? 0 : Elementid : null
-    //  }
      startNextScreen(textareaValue){
-         console.log(this.pickerTime);
-                  
-            console.log(textareaValue);
-            console.log("Next clicked!");
-            let when, newDate; 
-            if(!(this.pickerTime == undefined)){ 
-                let today = new Date(this.today);
-                this.pickerTime = this.pickerTime;
-                console.log(today, this.pickerTime, this.today);
-                // newDate = this.selectedDate.day.getFullYear() + ' ' +  
 
-                //                  Number(this.selectedDate.day.getMonth() + 1 )+ ' ' + 
-                //                  this.selectedDate.day.getDate() + ' ' +
-                //                  this.selectedDate.hour + ':' +
-                //                  this.selectedDate.minute + ' ' +
-                //                  this.selectedDate.amPm;
-            when = new Date(today.getFullYear(), 
-                            today.getMonth(), 
-                            today.getDate(), 
-                            Number(this.pickerTime.slice(0,2)), 
-                            Number(this.pickerTime.slice(3, this.pickerTime.length -1))
-                        ); 
-                console.log('when: ', when); 
-                console.log('location: ', this.loc); 
-                // console.log(this.pickupInstructions); 
-                if(!!textareaValue){ 
-                    this.patchPickUpDetails(when, textareaValue); 
                     this.navCtrl.push(DropOffDetails, { 
-                        preGenData: this.preGenData,
-                        pickUpDate: when
-                    }); 
-                }else{ 
-                    this.alertCntrl.openAlertDialog("What's missing?", "Enter pickup details."); 
-                } 
-            }else{
-                console.log(this.selectedDate) 
-                this.alertCntrl.openAlertDialog("What's missing?", "Please select time.");   
-            }
-            
-            
+                    });         
     }
     patchPickUpDetails(whenDate, textareaValue){
         console.log((this.loc as any)); 

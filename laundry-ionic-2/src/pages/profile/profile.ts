@@ -35,19 +35,15 @@ export class ProfileComponent implements OnInit{
             res => {
               if (res.status == 200){
                 console.log(res['_body']);
-                let response = JSON.parse(res['_body'])['data'][0];
+                let response = JSON.parse(res['_body']);
                 this.userProfile = {
-                  phone1: response.contact.phone1,
-                  phone2: response.contact.phone2,
-                  email1: response.contact.email1,
-                  firstname: response.firstName,
-                  lastname: response.lastName,
-                  middlename: response.middleName,
-                  city: response.currentCity,
-                  country: response.currentCountry,
+                  fullName: response.fullName,
+                  email: response.email,
+                  phoneNumber: response.phoneNumber,
+                  // password: response.password
                 }
 
-                console.log(this.profileForm.controls['email1'].value);
+                // console.log(this.profileForm.controls['email1'].value);
               
                 
                 for (var item in this.userProfile) {
@@ -61,47 +57,29 @@ export class ProfileComponent implements OnInit{
         this.buildForm();
         
     }
-    buildForm(): void{
-        let emailReg:  RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        this.profileForm = this.formBuilder.group({
-            firstname: ['', [
-                Validators.required,
-                Validators.minLength(3),
-                Validators.maxLength(50)]
-            ],
-            lastname: ['', [
-                Validators.minLength(3),
-                Validators.maxLength(50)]
-            ],
-            middlename: ['', [
-                Validators.minLength(4),
-                Validators.maxLength(50)]
-            ],
-            city: ['', [
-                // Validators.minLength(4),
-                // Validators.maxLength(50)
-                ]
-            ],
-            country: ['', [
-                // Validators.minLength(4),
-                // Validators.maxLength(50)
-                ]
-            ],
-            email1: ['', [
-                emailValidator(emailReg)]
-            ],
-            phone1: ['', [
-                Validators.required
-                // Validators.minLength(4),
-                // Validators.maxLength(50)
-                ]
-            ],
-            phone2: ['', [
-                // Validators.minLength(4),
-                // Validators.maxLength(50)
-                ]
-            ]
-        })
+    buildForm(): void {
+      let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      this.profileForm = this.formBuilder.group({
+        // username: ['', [
+        //   Validators.required
+        // ]],
+        fullName: ['', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50)]],
+        // password: ['', [
+        //   Validators.required,
+        //   Validators.minLength(4),
+        //   Validators.maxLength(36)
+        // ]],
+        phoneNumber: ['', [
+          Validators.required
+        ]],
+        email: ['', [
+          Validators.required,
+          emailValidator(emailReg)
+        ]],
+      });
     }
 
     validateForm(data?: any){
@@ -128,47 +106,31 @@ export class ProfileComponent implements OnInit{
     return this.error ? true: false;
   }
   formsError = {
-    firstname: '',
-    lastname: '',
-    middlename: '',
-    city: '',
-    country: '',
-    phone1: '',
-    email1: ''
+    fullName: '',
+    // password: '',
+    phoneNumber: '',
+    email: '',
   }
 
   validationMessages = {
-    firstname:{
-      'required': 'First name is required',
-      'minlength': 'First name should contain atleast 4 characters',
-      'maxlength': 'First name should be less than 50 characters'
+    fullName: {
+      'required': 'Ingresa un nombre.',
+      'minLength': 'El nombre debe contener mínimo 4 letras',
+      'maxlength': 'El nombre es demasiado largo'
     },
-    lastname:{
-      'minlength': 'Last name should contain atleast 4 characters',
-      'maxlength': 'Last name should be less than 50 characters'
+    // password: {
+    //   'required': 'Agrega una contraseña.',
+    //   'minLength': 'La contraseña debe contener mínimo 4 letras',
+    //   'maxlength': 'La contraseña es demasiado larga'
+    // },
+    phoneNumber: {
+      'required': 'Agrega tu número telefónico.',
     },
-    middlename:{
-      
-      'minlength': 'Last name should contain atleast 4 characters',
-      'maxlength': 'Last name should be less than 36 characters'
+    email: {
+      'required': 'Agrega tu correo electronico.',
+      'invalidEmail': 'Agrega correctamente tu correo.'
     },
-    city: {
-      
-    },
-    country: {
-
-    },
-    phone1: {
-      'required': 'Contact number is required'
-    },
-    phone2: {
-
-    },
-    email1: {
-      'invalidEmail': 'Invalid Email address',
-      'required': 'Email is required'
-    },
-  }    
+  } 
   ionViewDidLoad(){
     console.log('ionViewDidLoad');
     
@@ -189,17 +151,13 @@ export class ProfileComponent implements OnInit{
           let form = this.profileForm.value;
           console.log(form);
           
-          let data = {
-            "firstName": form.firstname,
-            "middleName": "",
-            "lastName": form.lastname,
-            "currentCity": form.city,
-            "currentCountry": form.country,
-            "contact": {
-              "phone1": form.phone1,
-              "phone2": form.phone2,
-              "email1": form.email1
-            }
+          var data = {
+            "fullName": this.profileForm.value.fullName || null,
+            "userName": this.profileForm.value.phoneNumber || null,
+            "email": this.profileForm.value.email || null,
+            phoneNumber: this.profileForm.value.phoneNumber || null,
+            roles: ["cliente"],
+            id: this.userID,
           }
           console.log(data);
           

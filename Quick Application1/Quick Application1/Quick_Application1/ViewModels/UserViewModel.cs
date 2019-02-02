@@ -11,20 +11,20 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-
+using System.ComponentModel;
 
 namespace Quick_Application1.ViewModels
 {
     public class UserViewModel
     {
         public string Id { get; set; }
-
-        [Required(ErrorMessage = "Username is required"), StringLength(200, MinimumLength = 2, ErrorMessage = "Username must be between 2 and 200 characters")]
+        [DisplayName("Nombre de usuario")] 
+        [Required(ErrorMessage = "Agrega el nombre de usuario"), StringLength(200, MinimumLength = 2, ErrorMessage = "El nombre de usuario debe tener entre 2 y 200 caracteres")]
         public string UserName { get; set; }
 
         public string FullName { get; set; }
 
-        [Required(ErrorMessage = "Email is required"), StringLength(200, ErrorMessage = "Email must be at most 200 characters"), EmailAddress(ErrorMessage = "Invalid email address")]
+        [Required(ErrorMessage = "Agrega un correo electrónico"), StringLength(200, ErrorMessage = "El correo electrónico es muy largo"), EmailAddress(ErrorMessage = "Agrega correctamente el correo electrónico")]
         public string Email { get; set; }
 
         public string JobTitle { get; set; }

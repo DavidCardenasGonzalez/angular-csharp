@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Quick Application1/Quick Application1/Quick_Application1/Quick_Application1.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

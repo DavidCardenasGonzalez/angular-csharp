@@ -6,8 +6,10 @@ import { StatusBar, Splashscreen, NativeStorage } from 'ionic-native';
 import { Storage } from '@ionic/storage';
 import { JwtHelper, AuthHttp, AuthConfig } from 'angular2-jwt';
 import { Http } from "@angular/http";
-import { BackgroundGeolocation, 
-         BackgroundGeolocationConfig } from '@ionic-native/background-geolocation';
+import {
+  BackgroundGeolocation,
+  BackgroundGeolocationConfig
+} from '@ionic-native/background-geolocation';
 
 
 //import { LaundryMap } from '../pages/map/map.component';
@@ -26,12 +28,12 @@ import { AuthService } from "./../auth/auth.service";
 import { globalVars } from "./globalvariables"
 @Component({
   templateUrl: 'app.html',
-  providers: [Storage, 
-              JwtHelper,
-              User,
-              BackgroundGeolocation,
-              AuthService
-              ]
+  providers: [Storage,
+    JwtHelper,
+    User,
+    BackgroundGeolocation,
+    AuthService
+  ]
 
 })
 export class MyApp {
@@ -39,19 +41,19 @@ export class MyApp {
 
   rootPage: any; //= SignInPage;
 
-  pages: Array<{title: string, component: any}>;
-  constructor(public platform: Platform, 
-              private storage: Storage,
-              private backgroundGeolocation: BackgroundGeolocation,
-              private jwtHelper: JwtHelper,
-              private user : User,
-              private authService: AuthService
-              ) {
+  pages: Array<{ title: string, component: any }>;
+  constructor(public platform: Platform,
+    private storage: Storage,
+    private backgroundGeolocation: BackgroundGeolocation,
+    private jwtHelper: JwtHelper,
+    private user: User,
+    private authService: AuthService
+  ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
 
-    this.pages = [      
+    this.pages = [
       { title: 'Home', component: OrdersHistoryPage },
       { title: 'Profile', component: ProfileComponent },
       { title: 'Payment Method', component: PaymentMethodsPage },
@@ -59,48 +61,48 @@ export class MyApp {
       //{ title: 'Notifications', component: NotificationComponent },
       { title: 'Complaints and Suggestions', component: ComplaintsSuggestionsPage },
       // { title: 'ForgotPassword', component: DropOffDetails},
-      
+
       { title: 'Sign Out', component: SignInPage }
-      
+
     ];
 
   }
 
-  refreshToken(){ 
-        let SignInURL = globalVars.PostSignInApi(); 
-        let token: string; 
-        this.storage.get('userDetails') 
-            .then( 
-                details => { 
-                    token = this.authService.postCall(SignInURL, details) 
-                } 
-            ) 
-            if(!!token){ 
-                return token; 
-            }else{ 
-                return null; 
-            } 
-    } 
+  refreshToken() {
+    let SignInURL = globalVars.PostSignInApi();
+    let token: string;
+    this.storage.get('userDetails')
+      .then(
+        details => {
+          token = this.authService.postCall(SignInURL, details)
+        }
+      )
+    if (!!token) {
+      return token;
+    } else {
+      return null;
+    }
+  }
 
   initializeApp() {
     //this.spinnerDialog.show();
-    this.platform.ready().then( () => {
+    this.platform.ready().then(() => {
 
       this.storage.get('x-access-token').then(
-        
-        token =>{
-          if(!!token){
-            this.refreshToken(); 
+
+        token => {
+          if (!!token) {
+            this.refreshToken();
 
             // Token exists
-            
+
             localStorage.setItem('x-access-token', token);
             // localStorage.setItem('userID', this.jwtHelper.decodeToken(token)['_id']);
-            this.rootPage = OrdersHistoryPage;  
-          }else{       
-            
+            this.rootPage = OrdersHistoryPage;
+          } else {
+
             // Token does not exist
-            
+
             this.rootPage = SignInPage;
             console.log('Could not find X-Access-Token. Please login or signup');
           }
@@ -111,37 +113,22 @@ export class MyApp {
         }
       );
 
-      setTimeout(() => { 
-        Splashscreen.hide(); 
-      }, 100); 
+      setTimeout(() => {
+        Splashscreen.hide();
+      }, 100);
       // Splashscreen.hide(); 
       StatusBar.styleDefault();
     });
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    //this.storage.get('x-access-token').then(
-    //    token =>{
-    if(page.title == "Sign Out"){
-
-      this.nav.setRoot(page.component);
-      this.storage.clear().then( ( (result) => {
-
-          console.log("sign out called")
-          console.log(localStorage.getItem('userID'), 'at App component \n',
-                        localStorage.getItem('x-access-token')
-                        );
-
-          localStorage.clear();
-          console.log("token after clearing local storage and native storage")
-          console.log(localStorage.getItem('userID'), 'at App component \n',
-                        localStorage.getItem('x-access-token')
-                        );
-        } ));
+    if (page.title == "Sign Out") {
+      this.storage.clear().then(((result) => {
+        this.nav.setRoot(page.component);
+        // localStorage.clear();
+      }));
     }
-    else    
+    else
       this.nav.setRoot(page.component);
   }
 }

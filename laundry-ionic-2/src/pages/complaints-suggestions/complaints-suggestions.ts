@@ -33,10 +33,9 @@ export class ComplaintsSuggestionsPage{suggestions
                  private authService: AuthService,
                  private alertCntrl: AlertDialogFactory){
         // this.preGenData = this.navParams.get('preGenData')
-        this.getHistory();
      }
     ionViewDidLoad(){
-      
+      this.getHistory();
     }    
     onTextEnter(value){
       this.charcount = value.length

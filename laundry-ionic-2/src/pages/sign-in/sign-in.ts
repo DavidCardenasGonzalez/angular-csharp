@@ -31,11 +31,10 @@ export class SignInPage implements OnInit {
     this.buildForm();
   }
   buildForm(): void{
-    let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // let emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.signInForm = this.formBuilder.group({
       email: [this.navParams.get('username') ? this.navParams.get('username'): '', [
-        Validators.required,
-        emailValidator(emailReg)
+        Validators.required
         ]],
       password: [this.navParams.get('password') ? this.navParams.get('password'): '',[
         Validators.required,
@@ -58,7 +57,6 @@ export class SignInPage implements OnInit {
         this.formsError[field] = '';
         const messages = this.validationMessages[field];
         for (const key in control.errors){  
-          console.log(control.errors);
           this.formsError[field] = messages[key];
         }
       }
@@ -84,31 +82,27 @@ export class SignInPage implements OnInit {
   }
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
-              private menuController: MenuController, 
+              // private menuController: MenuController, 
               private signInService: SignInService, 
               private storage: Storage, 
               private jwtHelper: JwtHelper,
               private toastCtrl: ToastController,
               private user: User,
-              private fb: Facebook,
-              private googlePlus: GooglePlus,
               private formBuilder: FormBuilder) {
-    this.menuController.swipeEnable(false);
-    if(this.navParams.get("signupSucess")){
-      this.presentToast('Sign Up Sucessful. You can now login.', "top")
-    }
   }
 
   
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SignInPage');
+    // this.menuController.swipeEnable(false);
+    // if(this.navParams.get("signupSucess")){
+    //   this.presentToast('Sign Up Sucessful. You can now login.', "top")
+    // }
   }
   signIn(user, passwd, social){
     let data;
     if(!social){
       this.validateForm(this.signInForm.value)
       this.submitted = true;
-      console.log(this.signInForm.value );
       data = {
         "username": this.signInForm.value.email,
         "password": this.signInForm.value.password
@@ -120,111 +114,31 @@ export class SignInPage implements OnInit {
         "password": passwd
       }
     }
-    
-    console.log(data);
-
     this.storage.set('userDetails', data);
     
     let URL = globalVars.PostSignInApi();
     this.signInService.signInUser(URL, data).subscribe(
       res => {
-          if(res.status == 200){
-              console.log(res['_body']);
-              console.log(res['_body']);              
+          if(res.status == 200){            
               this.token = JSON.parse(res['_body'])['access_token'];
               this.idToken = JSON.parse(res['_body'])['id_token'];
-              let userID = this.jwtHelper.decodeToken(this.idToken);
-              console.log(userID);
-              
-              localStorage.setItem('x-access-token',this.idToken);   
+              let userID = this.jwtHelper.decodeToken(this.idToken);              
+              localStorage.setItem('x-access-token',this.token);   
               localStorage.setItem('userID',this.jwtHelper.decodeToken(this.idToken)['sub']);
               this.user.saveUserId(userID);
-              console.log(userID.sub);
               localStorage.setItem('userID', userID.sub);
               this.user.saveUserAccessToken(this.idToken);
-              console.log(userID.sub);
               // this.user.scheduleRefresh(this.token);
               this.navCtrl.setRoot(OrdersHistoryPage);
           }
       }, err => {
-        console.log(err);
-        if(err.status == 401){
-          this.presentToast(JSON.parse(err['_body'])['message'], "bottom")
-        }
+        var msj = JSON.parse(err['_body'])['error_description'];
+        this.presentToast(msj, "bottom")
       });
   }
  
   signupPage(){
     this.navCtrl.setRoot(SignUpPage);
-  }
-  facebook = "facebook";
-  fbSignIn(){
-    console.log('FB SignIn clicked.');
-    this.fb.getLoginStatus().then(
-      res =>{
-        // if(res.status === 'connected'){
-        //   this.facebook = res.status;
-        //   let uid = res.authResponse.userID;
-        //   let accessToken = res.authResponse.accessToken;
-        //   this.user.saveSocialData(res.authResponse);
-        //   localStorage.setItem('fbData', JSON.stringify(res.authResponse));
-        // }else{
-          this.fb.login(['email', 'public_profile'], )
-            .then(
-              (res: FacebookLoginResponse) => {
-                console.log('Logged into facebook:', res)
-                this.facebook = res.status;
-                this.user.saveSocialData(res.authResponse);
-                localStorage.setItem('fbData', JSON.stringify(res.authResponse));
-                // this.navCtrl.setRoot(OrdersHistoryPage);
-
-                let fbUserID = res.authResponse.userID;
-
-                let params: Array<any>;
-                let data: any = {};
-                this.fb.api(`/me?fields=
-                                        name,
-                                        link,
-                                        locale,
-                                        gender,
-                                        first_name,
-                                        last_name
-                              `, params)
-                  .then(
-                    user => {
-                      console.log(JSON.stringify(user), user.name);
-                      data = {
-                        username: fbUserID,
-                        password: fbUserID + "facebook"
-                      }
-                      this.signIn(data.username, data.password, true)
-                    }
-                  )
-              }
-            )
-            .catch( 
-              e => {
-                console.log('Error logging into facebook', e)
-                this.facebook = e
-            })
-        }
-      // }
-    )
-    
-      
-  }
-  googleSignIn(){
-    this.googlePlus.login({})
-      .then(
-        res => {
-          console.log(JSON.stringify(res))
-          this.user.saveSocialData(res);
-          localStorage.setItem('GooglePlusData', JSON.stringify(res));
-        }
-      )
-      .catch(
-        error => console.log(error)
-      )
   }
   
   forgot(){
@@ -232,9 +146,6 @@ export class SignInPage implements OnInit {
   }
   
   presentToast(message, position){
-    
-    console.log('Inside toast');
-    
     let toast = this.toastCtrl.create({
       message: message,
       position: position,

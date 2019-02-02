@@ -60,18 +60,18 @@ export class DropOffDetails{
                  private authService: AuthService,
                  private alertCntrl: AlertDialogFactory){ 
                     
-        this.minDate = new Date(this.navParams.get('pickUpDate'));
-        console.log('64', this.minDate);
-        this.minDate.setDate(this.minDate.getDate() + 2);
-        this.maxDate = new Date();
-        this.maxDate.setYear(this.maxDate.getFullYear() + 1);
+        // this.minDate = new Date(this.navParams.get('pickUpDate'));
+        // console.log('64', this.minDate);
+        // this.minDate.setDate(this.minDate.getDate() + 2);
+        // this.maxDate = new Date();
+        // this.maxDate.setYear(this.maxDate.getFullYear() + 1);
 
-        console.log(this.maxDate);
-        this.maxDate = this.maxDate.toISOString().slice(0, 10);
-        //  console.log(this.navParams.get('pickUpDate'));
-         console.log(this.minDate.toISOString());
-         this.minDate = this.minDate.toISOString().slice(0, 10);
-         this.today = this.minDate;
+        // console.log(this.maxDate);
+        // this.maxDate = this.maxDate.toISOString().slice(0, 10);
+        // //  console.log(this.navParams.get('pickUpDate'));
+        //  console.log(this.minDate.toISOString());
+        //  this.minDate = this.minDate.toISOString().slice(0, 10);
+        //  this.today = this.minDate;
          
         //  console.log(this.minDate); 
          
@@ -128,33 +128,9 @@ export class DropOffDetails{
             this.highlightedAmPm === Elementid ? this.highlightedAmPm = 0 : this.highlightedAmPm = Elementid : ''; 
     }
      startNextScreen(textareaValue){
-            console.log("Next clicked!");
-            let when, newDate; 
-            if(!(this.dropOffTime == undefined)){ 
-                let today = new Date(this.today.slice(0,10));
-                this.dropOffTime =  this.dropOffTime.slice(0,2);
-                newDate = this.selectedDate.day.getFullYear() + ' ' +                                   
-                                 Number(this.selectedDate.day.getMonth() + 1 )+ ' ' + 
-                                 this.selectedDate.day.getDate() + ' ' +
-                                 this.selectedDate.hour + ':' +
-                                 this.selectedDate.minute + ' ' +
-                                 this.selectedDate.amPm; 
-                when = new Date(today.getFullYear(), today.getMonth(), today.getDate(), Number(this.dropOffTime)); 
-                console.log('when: ', when); 
-                console.log('location: ', this.loc); 
-                // console.log(this.pickupInstructions); 
-                if(!!textareaValue){ 
-                    this.patchDropOffDetails(when, textareaValue); 
                     this.navCtrl.push(OrderSummaryPage, { 
                         preGenData: this.preGenData
                     }); 
-                }else{ 
-                    this.alertCntrl.openAlertDialog("What's missing?", "Enter dropoff details."); 
-                } 
-            }else{ 
-                this.alertCntrl.openAlertDialog("What's missing?", "Please select time.");     
-            } 
-
     }
 
     patchDropOffDetails(whenDate, textareaValue){

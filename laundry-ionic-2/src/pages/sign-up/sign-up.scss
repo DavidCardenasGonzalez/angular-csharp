@@ -54,6 +54,15 @@ page-sign-up {
             text-align: center;
             color: color($colors, danger);
     }
+
+    ul.errors{
+        color: white;
+    }
+
+    ul.errors li{
+        padding: 3px;
+    }
+
     .fb-logo, .google-logo{
         height: 10vh;
     }

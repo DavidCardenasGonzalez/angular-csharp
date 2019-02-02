@@ -25,16 +25,15 @@ export class ServicesPage {
               public navParams: NavParams, 
               public servicesPatcher: ServicesPatcher,
               private authService: AuthService) {
-    this.data = navParams.get('preGenData');
-    console.log(this.data);
-    this.token = localStorage.getItem('x-access-token');
+
   }
   
 
 
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ServicesPage');
+    this.data = this.navParams.get('preGenData');
+    this.token = localStorage.getItem('x-access-token');
   }
 
   imageClicked(item ,firstrow?, firstcol?, lastrow?,lastcol?,indexOfSelectedRow?){

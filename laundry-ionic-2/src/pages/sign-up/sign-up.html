@@ -1,145 +1,48 @@
 <ion-content padding class="fill-bg">
-    <img class="main-logo" src="./assets/images/logo.png">
-    <form novalidate [formGroup]="signUpForm" #f>
-      <div class="sign-up-input-fields">
-        <ion-icon name="contact" class="sign-up-icon"></ion-icon>
-        <input 
-          required 
-          type="text" 
-          id="firstname" 
-          name="firstname" 
-          autocomplete="off" 
-          class="sign-up-input"
-          placeholder="Firstname"
-          formControlName="firstname">
-      </div>
-      <div 
-        *ngIf="formsError.firstname"
-        class="error"
-        center
-      >
-            {{ formsError.firstname }}
-      </div> 
-      <div class="sign-up-input-fields">
-        <ion-icon name="contact" class="sign-up-icon"></ion-icon>
-        <input 
-          required 
-          type="text" 
-          id="lastname" 
-          name="lastname" 
-          autocomplete="off" 
-          class="sign-up-input"
-          placeholder="Lastname"
-          formControlName="lastname">
-      </div>
-      <div 
-        *ngIf="formsError.lastname"
-        class="error"
-        center
-      >
-            {{ formsError.lastname }}
-      </div> 
-      <div class="sign-up-input-fields">
-        <ion-icon name="lock" class="sign-up-icon"></ion-icon>
-        <input
-          required 
-          id="password" 
-          type="password"
-          name="password" 
-          autocomplete="off" 
-          class="sign-up-input" 
-          placeholder="Password"
-          formControlName="password"> 
-      </div>
-      <div 
-            *ngIf="formsError.password"
-            class="error"
-            center
-          >
-                {{ formsError.password }}
-          </div>
-      <div class="sign-up-input-fields">
-        <ion-icon name="phone-portrait" class="sign-up-icon"></ion-icon>
-        <input 
-        required 
-        id="phone" 
-        type="tel"
-        name="phone" 
-        autocomplete="off" 
-        class="sign-up-input" 
-        placeholder="Phone Number"
-        formControlName="phone"> 
-      </div>
-      <div 
-            *ngIf="formsError.phone"
-            class="error"
-            center
-          >
-                {{ formsError.phone }}
-          </div>
-      <div class="sign-up-input-fields">
-        <ion-icon name="mail" class="sign-up-icon"></ion-icon>
-        <input 
-        required 
-        id="email" 
-        name="email" 
-        type="email" 
-        autocomplete="off" 
-        placeholder="Email"
-        class="sign-up-input"
-        formControlName="email"> 
-      </div>
-      <div 
-            *ngIf="formsError.email"
-            class="error"
-            center
-          >
-                {{ formsError.email }}
-          </div>
-      <div class="sign-up-input-fields">
-        <ion-icon ios="md-calendar" md="md-calendar" class="sign-up-icon"></ion-icon>
-        <input 
-        required 
-        id="dob" 
-        name="dob" 
-        type="text"
-        max="2005-1-1"
-        onfocus="(this.type='date')" 
-        onblur="if(this.value)this.placeholder=''"
-        autocomplete="off" 
-        placeholder="Date of Birth"
-        class="sign-up-input"
-        formControlName="dob"> 
-        
-      </div>
-      <div 
-            *ngIf="formsError.dob"
-            class="error"
-            center
-          >
-                {{ formsError.dob }}
-          </div>
-      <div padding>
-        <button 
-        block 
-        primary 
-        ion-button
-        class="uppercase"
-        (click)="signUp(username, password, phone, email, dob);">Sign Up</button>
-      </div>
-    </form>
-    <div class="center">
-      <img class="fb-logo" (click)="fbSignup();" src="./assets/images/fb_signup.png" alt="">
-      <img *ngIf="null" class="google-logo" src="./assets/images/googlePlus_icon.png" alt="">
+  <img class="main-logo" src="./assets/images/logo.png">
+  <form novalidate [formGroup]="signUpForm" #f>
+    <div class="sign-up-input-fields">
+      <ion-icon name="contact" class="sign-up-icon"></ion-icon>
+      <input required type="text" id="fullName" name="fullName" autocomplete="off" class="sign-up-input" placeholder="Nombre"
+        formControlName="fullName">
     </div>
+    <div *ngIf="formsError.fullName" class="error" center>
+      {{ formsError.fullName }}
+    </div>
+    <div class="sign-up-input-fields">
+      <ion-icon name="mail" class="sign-up-icon"></ion-icon>
+      <input required id="email" name="email" type="email" autocomplete="off" placeholder="Email" class="sign-up-input"
+        formControlName="email">
+    </div>
+    <div *ngIf="formsError.email" class="error" center>
+      {{ formsError.email }}
+    </div>
+    <div class="sign-up-input-fields">
+      <ion-icon name="phone-portrait" class="sign-up-icon"></ion-icon>
+      <input required id="phoneNumber" type="tel" name="phoneNumber" autocomplete="off" class="sign-up-input"
+        placeholder="Número de teléfono" formControlName="phoneNumber">
+    </div>
+    <div *ngIf="formsError.phoneNumber" class="error" center>
+      {{ formsError.phoneNumber }}
+    </div>
+    <div class="sign-up-input-fields">
+      <ion-icon name="lock" class="sign-up-icon"></ion-icon>
+      <input required id="password" type="password" name="password" autocomplete="off" class="sign-up-input"
+        placeholder="Contraseña" formControlName="password">
+    </div>
+    <div *ngIf="formsError.password" class="error" center>
+      {{ formsError.password }}
+    </div>
+    <ul class="errors">
+      <li *ngFor="let err of errors">{{err}}</li>
+    </ul>
+    <div padding>
+      <button block primary ion-button class="uppercase" (click)="signUp();">Registrarse</button>
+    </div>
+  </form>
 </ion-content>
 <ion-footer>
-  <button 
-    block
-    ion-button
-    (click)="signinPage();"
-    color="secondary"
-    class="center uppercase">
-      Already have an account? Sign In here.
+  <button block ion-button (click)="signinPage();" color="secondary" class="center uppercase">
+    Ya tienes una cuenta?, Inicia sesión
   </button>
 </ion-footer>

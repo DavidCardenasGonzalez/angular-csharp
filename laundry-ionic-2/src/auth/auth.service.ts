@@ -53,8 +53,8 @@ export class AuthService{
                         
                         let userID = this.jwtHelper.decodeToken(idtoken);
                         
-                        this.storage.set('x-access-token', idtoken);
-                        localStorage.setItem('x-access-token', idtoken);
+                        this.storage.set('x-access-token', token);
+                        localStorage.setItem('x-access-token', token);
                         
                         this.storage.set('user-id', userID)
                         localStorage.setItem('userID', userID.sub);
@@ -89,13 +89,8 @@ export class AuthService{
     RequestOptionsMaker(){
         let token = localStorage.getItem('x-access-token');
         let header = new Headers();
-        
-        console.log(this.jwtHelper.isTokenExpired(token));
-        if(this.jwtHelper.isTokenExpired(token)){
-            token = this.refreshToken();
-        }
-        console.log('JWT will expire at', this.jwtHelper.getTokenExpirationDate(token));
         header.append('x-access-token', token);
+        header.append( 'Authorization', 'Bearer ' + token);
         let options = new RequestOptions({ 
             headers: header 
         });

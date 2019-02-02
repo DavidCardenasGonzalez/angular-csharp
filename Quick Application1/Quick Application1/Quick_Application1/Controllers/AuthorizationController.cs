@@ -56,7 +56,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "Please check that your email and password is correct"
+                        ErrorDescription = "El nombre de usuario o contraseña son incorrector"
                     });
                 }
 
@@ -66,7 +66,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The specified user account is disabled"
+                        ErrorDescription = "Este usuario se encuentra deshabilitado"
                     });
                 }
 
@@ -80,7 +80,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The specified user account has been suspended"
+                        ErrorDescription = "Este usuario se encuentra deshabilitado"
                     });
                 }
 
@@ -90,7 +90,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "Invalid login procedure"
+                        ErrorDescription = "No es posible iniciar sesión"
                     });
                 }
 
@@ -100,7 +100,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The specified user is not allowed to sign in"
+                        ErrorDescription = "Este usuario se encuentra deshabilitado"
                     });
                 }
 
@@ -109,7 +109,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "Please check that your email and password is correct"
+                        ErrorDescription = "El nombre de usuario o contraseña son incorrector"
                     });
                 }
 
@@ -135,7 +135,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The refresh token is no longer valid"
+                        ErrorDescription = "Este token ya no es valido"
                     });
                 }
 
@@ -145,7 +145,7 @@ namespace Quick_Application1.Controllers
                     return BadRequest(new OpenIdConnectResponse
                     {
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The user is no longer allowed to sign in"
+                        ErrorDescription = "Este usuario se encuentra deshabilitado"
                     });
                 }
 

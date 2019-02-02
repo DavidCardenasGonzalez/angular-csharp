@@ -37,7 +37,7 @@ export const globalVars =  {
         return this.BaseURL + this.OrderURL + orderID + this.CareInstructionsURL;
     },
     AllUsers: "/api/v1/users/",
-    SignUp: "/api/v1/user/signup",
+    SignUp: "/api/account/users2",
     PostNewUser(){
         return ((this.BaseURL + this.SignUp as string));
     },
@@ -71,9 +71,10 @@ export const globalVars =  {
     getForgotPasswordAPIURL(){
         return this.BaseURL + this.AllUsers + this.forgorPasswordURL;
     },
-    profileURL: '/profile',
+    profileURL: '/api/account/users/',
     profileAPIURL(userID){
-        return this.BaseURL + this.AllUsers + userID + this.profileURL;
+        return this.BaseURL + this.profileURL + userID;
+        // return this.BaseURL + this.AllUsers + userID + this.profileURL;
     },
     statusURL: 'statuslist',
     statusAPIURL(){

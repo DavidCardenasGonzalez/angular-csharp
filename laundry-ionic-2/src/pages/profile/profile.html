@@ -9,157 +9,38 @@
 
 <ion-content padding class="fill-bg">
   <div class="parentDivScreen">
-    <!--<div class="heading">
-      <ion-item-divider class="fill-bg"
-                        style="
-                                padding-top: 5px; 
-                                padding-bottom: 5px; 
-                                border-bottom: 0px">
-        <div id="heading-bg" 
-        style="padding: 10px; 
-              background: url('./assets/images/heading_bg.png');  
-              text-align: center;
-              background-size: 100%; 
-              background-repeat: no-repeat;
-              background-position: center;
-              width: 100%; 
-              height: 100%;"
-              color="secondary">
-        <p color="secondary">PROFILE</p>
-        </div>
-      </ion-item-divider>
-    
-    </div>-->
+
     <form novalidate [formGroup]="profileForm">
         <div class="profile-input-fields">
-            <input 
-                type="text" 
-                id="firstname" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="First name"
-                formControlName="firstname">
-        </div>
-        <div 
-            *ngIf="formsError.firstname" 
-            class="error"
-            
-        >
-            {{ formsError.firstname }}
-        </div>
-        <div *ngIf="null" class="profile-input-fields">
-            <input 
-                type="text" 
-                id="lastname" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Middle name"
-                formControlName="middlename">
-        </div>
-        <div 
-            *ngIf="null && formsError.middlename" 
-            class="error"
-            center
-        >
-            {{ formsError.middlename }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="text" 
-                id="lastname" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Last name"
-                formControlName="lastname">
-        </div>
-        <div 
-            *ngIf="formsError.lastname" 
-            class="error"
-            center
-        >
-            {{ formsError.lastname }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="text" 
-                id="city" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="City"
-                formControlName="city">
-        </div>
-        <div 
-            *ngIf="formsError.city" 
-            class="error"
-            center
-        >
-            {{ formsError.city }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="text" 
-                id="country" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Country"
-                formControlName="country">
-        </div>
-        <div 
-            *ngIf="formsError.country" 
-            class="error"
-            center
-        >
-            {{ formsError.country }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="tel" 
-                id="phone1" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Contact"
-                formControlName="phone1">
-        </div>
-        <div 
-            *ngIf="formsError.phone1" 
-            class="error"
-            center
-        >
-            {{ formsError.phone1 }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="tel" 
-                id="phone2" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Alternate Contact "
-                formControlName="phone2">
-        </div>
-        <div 
-            *ngIf="formsError.phone2" 
-            class="error"
-            center
-        >
-            {{ formsError.phone2 }}
-        </div>
-        <div class="profile-input-fields">
-            <input 
-                type="text" 
-                id="email1" 
-                autocomplete="off" 
-                class="profile-input" 
-                placeholder="Email"
-                value="this.userProfile?.email1"
-                formControlName="email1">
-        </div>
-        <div 
-            *ngIf="formsError.email1" 
-            class="error"
-            center
-        >
-            {{ formsError.email1 }}
-        </div>
+            <ion-icon name="contact" class="profile-icon"></ion-icon>
+            <input required type="text" id="fullName" name="fullName" autocomplete="off" class="profile-input" placeholder="Nombre"
+              formControlName="fullName">
+          </div>
+          <div *ngIf="formsError.fullName" class="error" center>
+            {{ formsError.fullName }}
+          </div>
+          <div class="profile-input-fields">
+            <ion-icon name="mail" class="profile-icon"></ion-icon>
+            <input required id="email" name="email" type="email" autocomplete="off" placeholder="Email" class="profile-input"
+              formControlName="email">
+          </div>
+          <div *ngIf="formsError.email" class="error" center>
+            {{ formsError.email }}
+          </div>
+          <div class="profile-input-fields">
+            <ion-icon name="phone-portrait" class="profile-icon"></ion-icon>
+            <input required id="phoneNumber" type="tel" name="phoneNumber" autocomplete="off" class="profile-input"
+              placeholder="Número de teléfono" formControlName="phoneNumber">
+          </div>
+          <div *ngIf="formsError.phoneNumber" class="error" center>
+            {{ formsError.phoneNumber }}
+          </div>
+          <div *ngIf="formsError.password" class="error" center>
+            {{ formsError.password }}
+          </div>
+          <ul class="errors">
+            <li *ngFor="let err of errors">{{err}}</li>
+          </ul>
     </form>
    
  </div>   

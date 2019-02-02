@@ -286,6 +286,30 @@ namespace Quick_Application1.Controllers
             return BadRequest(ModelState);
         }
 
+        [AllowAnonymous]
+        [HttpPost("users2")]
+        public async Task<IActionResult> Register2([FromBody] UserEditViewModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                if (user == null)
+                    return BadRequest($"{nameof(user)} cannot be null");
+
+
+                ApplicationUser appUser = Mapper.Map<ApplicationUser>(user);
+                var result = await _accountManager.CreateUserAsync(appUser, new string[] { "cliente" }, user.NewPassword);
+                if (result.Item1)
+                {
+                    UserViewModel userVM = await GetUserViewModelHelper(appUser.Id);
+                    return CreatedAtAction(GetUserByIdActionName, new { id = userVM.Id }, userVM);
+                }
+
+                AddErrors(result.Item2);
+            }
+
+            return BadRequest(ModelState);
+        }
+
 
         [HttpDelete("users/{id}")]
         [ProducesResponseType(200, Type = typeof(UserViewModel))]

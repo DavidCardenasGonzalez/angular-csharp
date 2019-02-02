@@ -52,6 +52,7 @@ namespace Quick_Application1
             // add identity
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddErrorDescriber<SpanishIdentityErrorDescriber>() 
                 .AddDefaultTokenProviders();
 
             // Configure Identity options and password complexity here
@@ -61,11 +62,11 @@ namespace Quick_Application1
                 options.User.RequireUniqueEmail = true;
 
                 //    //// Password settings
-                //    //options.Password.RequireDigit = true;
-                //    //options.Password.RequiredLength = 8;
-                //    //options.Password.RequireNonAlphanumeric = false;
-                //    //options.Password.RequireUppercase = true;
-                //    //options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
 
                 //    //// Lockout settings
                 //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
